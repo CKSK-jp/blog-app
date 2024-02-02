@@ -3,6 +3,9 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+default_img = (
+    "https://api-private.atlassian.com/users/ee515f6bdec67ecf64602ee22a0a0e6a/avatar"
+)
 
 
 def connect_db(app):
@@ -10,14 +13,14 @@ def connect_db(app):
     db.init_app(app)
 
 
-class Pet(db.Model):
-    __tablename__ = "pets"
+class User(db.Model):
+    __tablename__ = "users"
 
     def __repr__(self):
-        p = self
-        return f"<Pet id={p.id} name={p.species} hunger={p.hunger}"
+        u = self
+        return f"<User ID={u.id} name={u.first_name} {u.last_name} image={u.image_url}"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String, nullable=False, unique=True)
-    species = db.Column(db.String(30), nullable=True)
-    hunger = db.Column(db.Integer, nullable=False, default=20)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    image_url = db.Column(db.String, default=default_img)

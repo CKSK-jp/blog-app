@@ -7,7 +7,7 @@ CREATE DATABASE blogly;
 
 \c blogly
 
-CREATE TABLE artists
+CREATE TABLE users
 (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL

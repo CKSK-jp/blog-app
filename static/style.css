@@ -1,0 +1,17 @@
+#form-container {
+  width: 50vw;
+}
+
+.form-group { 
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.button-container {
+  align-items: end;
+}
+
+button {
+  width: 3rem;
+}

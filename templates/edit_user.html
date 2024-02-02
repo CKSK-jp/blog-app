@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Create User{% endblock %}
+
+
+{% block heading %}Create New User{% endblock %}
+
+{% block content %}
+<div id="form-container">
+  <form id="surveyForm" method="POST" action="/submit">
+    <div class="form-group">
+      <h3>Create User</h3>
+      <input type="text" name="first-name" placeholder="Enter a first name">
+      <input type="text" name="last-name" placeholder="Enter a last name">
+      <input type="url" name="img-url" placeholder="Provide an image of this user">
+      <div class="button-container">
+        <button>Cancel</button>
+        <button type="submit">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
