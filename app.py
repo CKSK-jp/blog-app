@@ -1,11 +1,8 @@
 """Blogly application."""
 
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 
 from models import User, connect_db, db, default_img
-
-# from sqlalchemy import text
-
 
 app = Flask(__name__)
 
