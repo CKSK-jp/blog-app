@@ -1,16 +1,28 @@
 {% extends 'base.html' %}
 
-{% block title %}Users Listing{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block content %}
 <h1>Users</h1>
-<div class="users-list">
+<div id="users-list">
   <ul>
-    <li>
-      <a href="/user_details.html">example user</a>
-    </li>
+      {% for user in users %}
+      <li>
+        <a href="/user_details/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a>
+      </li>
+      {% endfor %}
   </ul>
-  <a href="/create_user.html">Add User</a>
+  <div id="add-user-btn-container">
+    <a href="/create_user" class="add-user-button">Add user</a>
+  </div>
 </div>
 </div>
 {% endblock %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="flash-message {{ category }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endwith %}

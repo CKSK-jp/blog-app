@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 
-{% block title %}User Page{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block content %}
-<div>
-  <p>
-    insert user image here
-  </p>
+<div id="user-container">
+  <img src="{{ user.image_url }}" alt="{{ user.first_name }} {{ user.last_name }} profile pic" class="user-icon">
 
   <div class="user-details">
-    <h3>User Name</h3>
-    <a href="/templates/create_user.html">Edit</a>
-    <button for="delete-user">Delete</button>
+    <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+    <div class="user-button-container">
+      <a href="/edit_user/{{ user.id }}" class="edit-button">Edit</a>
+
+      <form action="/delete_user" method="POST">
+        <input type="hidden" name="user_id" value=" {{ user.id }}">
+        <button for="delete-user" class="delete-button">Delete</button>
+      </form>
+    </div>
   </div>
 </div>
+<hr>
+<a href="/" class="return-button">Return to Users</a>
 {% endblock %}

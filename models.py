@@ -3,9 +3,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-default_img = (
-    "https://api-private.atlassian.com/users/ee515f6bdec67ecf64602ee22a0a0e6a/avatar"
-)
+default_img = "/static/icons/no-profile-picture-icon.png"
 
 
 def connect_db(app):

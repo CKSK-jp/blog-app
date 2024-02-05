@@ -1,22 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Create User{% endblock %}
-
-
-{% block heading %}Create New User{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block content %}
+<div id="header-container">
+  <h1>Create User</h1>
+</div>
+
 <div id="form-container">
-  <form id="surveyForm" method="POST" action="/submit">
+  <form id="surveyForm" method="POST" action="/create_user">
     <div class="form-group">
-      <h3>Create User</h3>
-      <input type="text" name="first-name" placeholder="Enter a first name">
-      <input type="text" name="last-name" placeholder="Enter a last name">
+      <label for="first-name">First Name</label>
+      <input type="text" name="first-name" placeholder="Enter a first name" required>
+      <label for="first-name">Last Name</label>
+      <input type="text" name="last-name" placeholder="Enter a last name" required>
+      <label for="first-name">Image URL</label>
       <input type="url" name="img-url" placeholder="Provide an image of this user">
-      <button type="submit">Add</button>
+      <div class="button-container">
+        <a href="/" class="cancel-button">Cancel</a>
+        <button type="submit" class="add-button">Add</button>
+      </div>
     </div>
   </form>
-  <a href="/">Return</a>
 </div>
 {% endblock %}
 
