@@ -54,9 +54,23 @@ def edit_user(user_id):
     return render_template("edit_user.html", title="Edit User", user=user)
 
 
-@app.route("/submit_edit", methods=["POST"])
-def submit_edit():
-    return render_template("user_details.html")
+@app.route("/submit_edit/<int:user_id>", methods=["POST"])
+def submit_edit(user_id):
+    user = User.query.get_or_404(user_id)
+    if request.method == "POST":
+        first_name = request.form.get("first-name")
+        last_name = request.form.get("last-name")
+        img_url = request.form.get("img-url")
+        user.first_name = first_name
+        user.last_name = last_name
+        if img_url == "":
+            print("no new image entered")
+        else:
+            user.image_url = img_url
+
+        db.session.commit()
+        flash("User info edited!", category="success")
+    return redirect(url_for(f"user_details", user_id=user.id))
 
 
 @app.route("/delete_user", methods=["POST"])
