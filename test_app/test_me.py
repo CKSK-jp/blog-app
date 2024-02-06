@@ -43,9 +43,9 @@ class UserDatabaseTests(TestCase):
     def test_add_user(self):
         with app.test_client() as client:
             user_2 = {
-                "first_name": "Quinn",
-                "last_name": "Hughes",
-                "image_url": default_img,
+                "first-name": "Quinn",
+                "last-name": "Hughes",
+                "image-url": default_img,
             }
             response = client.post("/create_user", data=user_2, follow_redirects=True)
             html = response.get_data(as_text=True)
@@ -56,7 +56,7 @@ class UserDatabaseTests(TestCase):
     def test_delete_user(self):
         with app.test_client() as client:
             response = client.post(
-                f"/delete_user", data=self.user_id, follow_redirects=True
+                f"/delete_user", data={"user_id": self.user_id}, follow_redirects=True
             )
             html = response.get_data(as_text=True)
 
@@ -66,12 +66,12 @@ class UserDatabaseTests(TestCase):
     def test_edit_user(self):
         with app.test_client() as client:
             update_name = {
-                "first_name": "Daniel",
-                "last_name": "Sedin",
-                "image_url": "",
+                "first-name": "Daniel",
+                "last-name": "Sedin",
+                "image-url": "",
             }
             response = client.post(
-                f"/edit_user/{self.user_id}", data=update_name, follow_redirects=True
+                f"/submit_edit/{self.user_id}", data=update_name, follow_redirects=True
             )
             html = response.get_data(as_text=True)
 
