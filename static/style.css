@@ -19,6 +19,19 @@ h1 {
   color: white;
 }
 
+li, h3, i {
+  color: white;
+}
+
+h3 {
+  margin-bottom: 0;
+}
+
+ul {
+  margin-top: 10px;
+  padding-left: 30px;
+}
+
 #users-list {
   display: flex;
   flex-direction: column;
@@ -30,6 +43,15 @@ h1 {
 
 #user-container {
   display: flex;
+  margin-bottom: 20px;
+}
+
+#post-content {
+  background-color: #1a1a1b;
+  padding: 20px 10px;
+  margin: 20px 0;
+  border-radius: 5px;
+  color: #bec1c3;
 }
 
 .form-group {
@@ -57,7 +79,8 @@ input {
   margin: 20px;
 }
 
-.user-button-container {
+.user-button-container, 
+.post-button-container {
   display: flex;
   align-items: center;
   justify-content: start;
