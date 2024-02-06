@@ -8,12 +8,13 @@ class UserDatabaseTests(TestCase):
 
     def setUp(self):
         with app.app_context():
-            db.create_all()
+            app.config["TESTING"] = True
+            app.config
 
             User.query.delete()
 
             new_user = User(
-                first_name="Henrik", last_name="Sedin", image_url=default_img
+                first_name="Daniel", last_name="Sedin", image_url=default_img
             )
             db.session.add(new_user)
             db.session.commit()
@@ -22,23 +23,23 @@ class UserDatabaseTests(TestCase):
 
     def tearDown(self):
         with app.app_context():
-            db.session.remove()
+            db.session.rollback()
 
     def test_users_list(self):
         with app.test_client() as client:
-            response = client.get("/")
+            response = client.get("/users")
             html = response.get_data(as_text=True)
 
             self.assertEqual(response.status_code, 200)
-            self.assertIn("Henrik", html)
+            self.assertIn("Daniel", html)
 
     def test_user_details(self):
         with app.test_client() as client:
-            response = client.get(f"/user_details/{self.user_id}")
+            response = client.get(f"/users/{self.user_id}")
             html = response.get_data(as_text=True)
 
             self.assertEqual(response.status_code, 200)
-            self.assertIn("<h1>Henrik Sedin</h1>", html)
+            self.assertIn("<h1>Daniel Sedin</h1>", html)
 
     def test_add_user(self):
         with app.test_client() as client:
@@ -56,18 +57,18 @@ class UserDatabaseTests(TestCase):
     def test_delete_user(self):
         with app.test_client() as client:
             response = client.post(
-                f"/user/{self.user_id}/delete", follow_redirects=True
+                f"/users/{self.user_id}/delete", follow_redirects=True
             )
             html = response.get_data(as_text=True)
 
             self.assertEqual(response.status_code, 200)
-            self.assertNotIn("Henrik", html)
+            self.assertNotIn("Daniel", html)
 
     def test_edit_user(self):
         with app.test_client() as client:
             update_name = {
-                "first-name": "Daniel",
-                "last-name": "Sedin",
+                "first-name": "Ryan",
+                "last-name": "Miller",
                 "image-url": "",
             }
             response = client.post(
@@ -76,4 +77,4 @@ class UserDatabaseTests(TestCase):
             html = response.get_data(as_text=True)
 
             self.assertEqual(response.status_code, 200)
-            self.assertIn("<h1>Daniel Sedin</h1>", html)
+            self.assertIn("<h1>Ryan Miller</h1>", html)
