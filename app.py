@@ -7,7 +7,7 @@ from models import User, connect_db, db, default_img
 app = Flask(__name__)
 
 app.secret_key = "123-456-789"
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///users_db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///users_db_test"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
 
