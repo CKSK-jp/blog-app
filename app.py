@@ -17,13 +17,18 @@ with app.app_context():
     db.create_all()
 
 
-@app.route("/", methods=["GET"])
+@app.route("/")
+def redirect_to_users():
+    return redirect(url_for("home_page"))
+
+
+@app.route("/users", methods=["GET"])
 def home_page():
-    users = User.query.all()
+    users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template("users.html", title="Users Listing", users=users)
 
 
-@app.route("/create_user", methods=["GET", "POST"])
+@app.route("/users/new", methods=["GET", "POST"])
 def create_user():
     if request.method == "POST":
         first_name = request.form.get("first-name")
@@ -35,23 +40,23 @@ def create_user():
         db.session.commit()
 
         flash("User successfully added!", category="success")
-        return redirect("/")
+        return redirect(url_for("home_page"))
     return render_template("create_user.html", title="Create User")
 
 
-@app.route("/user_details/<int:user_id>", methods=["GET"])
+@app.route("/users/<int:user_id>", methods=["GET"])
 def user_details(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("user_details.html", title="User details", user=user)
 
 
-@app.route("/edit_user/<int:user_id>", methods=["GET"])
+@app.route("/users/<int:user_id>/edit", methods=["GET"])
 def edit_user(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("edit_user.html", title="Edit User", user=user)
 
 
-@app.route("/submit_edit/<int:user_id>", methods=["POST"])
+@app.route("/users/<int:user_id>/submit", methods=["POST"])
 def submit_edit(user_id):
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
@@ -60,19 +65,18 @@ def submit_edit(user_id):
         img_url = request.form.get("img-url")
         user.first_name = first_name
         user.last_name = last_name
-        if img_url == "":
+        if not img_url:
             print("no new image entered")
         else:
             user.image_url = img_url
 
         db.session.commit()
         flash("User info edited!", category="success")
-    return redirect(url_for(f"user_details", user_id=user.id))
+    return redirect(url_for("user_details", user_id=user.id))
 
 
-@app.route("/delete_user", methods=["POST"])
-def delete_user():
-    user_id = request.form.get("user_id")
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id):
 
     user = User.query.get(user_id)
 

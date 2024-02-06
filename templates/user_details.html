@@ -4,15 +4,15 @@
 
 {% block content %}
 <div id="user-container">
-  <img src="{{ user.image_url }}" alt="{{ user.first_name }} {{ user.last_name }} profile pic" class="user-icon">
+  <img src="{{ user.image_url }}" alt="{{ user.get_full_name() }} profile pic" class="user-icon">
 
   <div class="user-details">
-    <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+    <h1>{{ user.get_full_name() }}</h1>
     <div class="user-button-container">
-      <a href="/edit_user/{{ user.id }}" class="edit-button">Edit</a>
+      <a href="/users/{{ user.id }}/edit" class="edit-button">Edit</a>
 
-      <form action="/delete_user" method="POST">
-        <input type="hidden" name="user_id" value=" {{ user.id }}">
+      <form action="/users/{{ user.id }}/delete" method="POST">
+        <input type="hidden" name="user_id">
         <button for="delete-user" class="delete-button">Delete</button>
       </form>
     </div>

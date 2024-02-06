@@ -47,7 +47,7 @@ class UserDatabaseTests(TestCase):
                 "last-name": "Hughes",
                 "image-url": default_img,
             }
-            response = client.post("/create_user", data=user_2, follow_redirects=True)
+            response = client.post("/users/new", data=user_2, follow_redirects=True)
             html = response.get_data(as_text=True)
 
             self.assertEqual(response.status_code, 200)
@@ -56,7 +56,7 @@ class UserDatabaseTests(TestCase):
     def test_delete_user(self):
         with app.test_client() as client:
             response = client.post(
-                f"/delete_user", data={"user_id": self.user_id}, follow_redirects=True
+                f"/user/{self.user_id}/delete", follow_redirects=True
             )
             html = response.get_data(as_text=True)
 
@@ -71,7 +71,7 @@ class UserDatabaseTests(TestCase):
                 "image-url": "",
             }
             response = client.post(
-                f"/submit_edit/{self.user_id}", data=update_name, follow_redirects=True
+                f"/users/{self.user_id}/submit", data=update_name, follow_redirects=True
             )
             html = response.get_data(as_text=True)
 

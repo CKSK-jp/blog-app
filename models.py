@@ -22,3 +22,6 @@ class User(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String, default=default_img)
+
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
