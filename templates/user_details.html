@@ -6,15 +6,27 @@
 <div id="user-container">
   <img src="{{ user.image_url }}" alt="{{ user.get_full_name() }} profile pic" class="user-icon">
 
-  <div class="user-details">
+  <div id="user-details">
     <h1>{{ user.get_full_name() }}</h1>
     <div class="user-button-container">
       <a href="/users/{{ user.id }}/edit" class="edit-button">Edit</a>
 
       <form action="/users/{{ user.id }}/delete" method="POST">
         <input type="hidden" name="user_id">
-        <button for="delete-user" class="delete-button">Delete</button>
+        <button type="submit" class="delete-button">Delete</button>
       </form>
+    </div>
+
+    <div id="posts-container">
+      <h3>Posts</h3>
+      <ul>
+        {% for post in posts%}
+          <li>
+            <a href="/posts/{{ post.id }}">{{ post.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      <a href="/users/{{ user.id }}/posts/new" class="edit-button">Add Post</a>
     </div>
   </div>
 </div>

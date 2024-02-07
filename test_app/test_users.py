@@ -9,7 +9,6 @@ class UserDatabaseTests(TestCase):
     def setUp(self):
         with app.app_context():
             app.config["TESTING"] = True
-            app.config
 
             User.query.delete()
 
@@ -23,7 +22,7 @@ class UserDatabaseTests(TestCase):
 
     def tearDown(self):
         with app.app_context():
-            db.session.rollback()
+            User.query.delete()
 
     def test_users_list(self):
         with app.test_client() as client:
