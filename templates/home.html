@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+
+{% block navbar %}
+<ul>
+  <li><a href="/users" class="nav-item">Users</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<section id="posts-container">
+  <h1>Blogly Recent Posts</h1>
+  {% for post in posts %}
+  <div class="post item-container">
+    <h3>{{ post.title }}</h3>
+    <div id="post-content">
+      {{post.content}}
+    </div>
+    <hr>
+    {% for user in users %}
+    {% if user.id == post.user_id %}
+    <i>By {{ user.get_full_name() }} on {{ post.created_at.strftime("%a %b %d %Y, %I:%M%p") }}</i>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

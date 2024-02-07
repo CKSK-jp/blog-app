@@ -2,6 +2,13 @@
 
 {% block title %}{{title}}{% endblock %}
 
+{% block navbar %}
+<ul>
+  <li><a href="/" class="nav-item">Home</a></li>
+  <li><a href="/users" class="nav-item">Users</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <div id="header-container">
   <h1>Add Post for {{ user.get_full_name() }}</h1>
@@ -11,9 +18,9 @@
   <form id="surveyForm" method="POST" action="/users/{{ user.id }}/posts/new">
     <div class="form-group">
       <label for="post-title">Title</label>
-      <input type="text" name="post-title" placeholder="Enter a post title">
+      <input type="text" name="post-title" placeholder="Enter a post title" required>
       <label for="post-content">Content</label>
-      <textarea name="post-content" id="post-content" placeholder="Enter post content"></textarea>
+      <textarea name="post-content" id="post-content" placeholder="Enter post content" required></textarea>
       <div class="button-container">
         <a href="/users/{{ user.id }}" class="cancel-button">Cancel</a>
         <button type="submit" class="save-button">Save</button>

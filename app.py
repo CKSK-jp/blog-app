@@ -18,12 +18,14 @@ with app.app_context():
 
 
 @app.route("/")
-def redirect_to_users():
-    return redirect(url_for("home_page"))
+def home_page():
+    users = User.query.order_by(User.last_name, User.first_name).all()
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    return render_template("home.html", users=users, posts=posts)
 
 
 @app.route("/users", methods=["GET"])
-def home_page():
+def users_page():
     users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template("users.html", title="Users Listing", users=users)
 
@@ -40,7 +42,7 @@ def create_user():
         db.session.commit()
 
         flash("User successfully added!", category="success")
-        return redirect(url_for("home_page"))
+        return redirect(url_for("users_page"))
     return render_template("create_user.html", title="Create User")
 
 
@@ -95,7 +97,7 @@ def delete_user(user_id):
         )
     else:
         flash("User not found or already deleted", category="error")
-    return redirect(url_for("home_page"))
+    return redirect(url_for("users_page"))
 
 
 @app.route("/posts/<int:post_id>")

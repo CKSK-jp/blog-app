@@ -2,6 +2,13 @@
 
 {% block title %}{{title}}{% endblock %}
 
+{% block navbar %}
+<ul>
+  <li><a href="/" class="nav-item">Home</a></li>
+  <li><a href="/users" class="nav-item">Users</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <div id="header-container">
   <h1>Create User</h1>
@@ -17,7 +24,7 @@
       <label for="first-name">Image URL</label>
       <input type="url" name="img-url" placeholder="Provide an image of this user">
       <div class="button-container">
-        <a href="/" class="cancel-button">Cancel</a>
+        <a href="/users" class="cancel-button">Cancel</a>
         <button type="submit" class="add-button">Add</button>
       </div>
     </div>

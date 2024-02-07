@@ -2,34 +2,48 @@
 
 {% block title %}{{title}}{% endblock %}
 
+{% block navbar %}
+<ul>
+  <li><a href="/">Home</a></li>
+  <li><a href="/users">Users</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
-<div id="user-container">
-  <img src="{{ user.image_url }}" alt="{{ user.get_full_name() }} profile pic" class="user-icon">
+<div id="user-container" class="item-container">
+  <div id="profile-pic">
+    <img src="{{ user.image_url }}" alt="{{ user.get_full_name() }} profile pic" class="user-icon">
+  </div>
 
-  <div id="user-details">
-    <h1>{{ user.get_full_name() }}</h1>
-    <div class="user-button-container">
-      <a href="/users/{{ user.id }}/edit" class="edit-button">Edit</a>
+  <div>
+    <div id="user-info" class="sub-container">
+      <div id="user-name">
+        <h1>{{ user.get_full_name() }}</h1>
+        <div class="user-button-container">
+          <a href="/users/{{ user.id }}/edit" class="edit-button">Edit</a>
 
-      <form action="/users/{{ user.id }}/delete" method="POST">
-        <input type="hidden" name="user_id">
-        <button type="submit" class="delete-button">Delete</button>
-      </form>
+          <form action="/users/{{ user.id }}/delete" method="POST">
+            <input type="hidden" name="user_id">
+            <button type="submit" class="delete-button">Delete</button>
+          </form>
+        </div>
+      </div>
     </div>
 
-    <div id="posts-container">
-      <h3>Posts</h3>
-      <ul>
-        {% for post in posts%}
+    <div id="user-posts-container" class="sub-container">
+      <div>
+        <h3>Posts</h3>
+        <ul id="posts-list">
+          {% for post in posts%}
           <li>
             <a href="/posts/{{ post.id }}">{{ post.title }}</a>
           </li>
-        {% endfor %}
-      </ul>
-      <a href="/users/{{ user.id }}/posts/new" class="edit-button">Add Post</a>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
+    <a href="/users/{{ user.id }}/posts/new" class="add-button">Add Post</a>
   </div>
+
 </div>
-<hr>
-<a href="/" class="return-button">Return to Users</a>
 {% endblock %}
