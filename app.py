@@ -2,7 +2,7 @@
 
 from flask import Flask, flash, redirect, render_template, request, url_for
 
-from models import Post, User, connect_db, db, default_img
+from models import Post, Tag, User, connect_db, db, default_img
 
 app = Flask(__name__)
 
@@ -20,8 +20,8 @@ with app.app_context():
 @app.route("/")
 def home_page():
     users = User.query.order_by(User.last_name, User.first_name).all()
-    posts = Post.query.order_by(Post.created_at.desc()).all()
-    return render_template("home.html", users=users, posts=posts)
+    posts = Post.query.order_by(Post.created_at).all()
+    return render_template("home.html", title="Home Page", users=users, posts=posts)
 
 
 @app.route("/users", methods=["GET"])
@@ -160,6 +160,31 @@ def delete_post(post_id):
     else:
         flash("Post not found or already deleted", category="error")
     return redirect(url_for("user_details", user_id=user_id))
+
+
+@app.route("/tags", methods=["GET"])
+def get_tags():
+    tags = Tag.query.all()
+    if not tags:
+        return render_template("tags.html", title="Tags", tags=[])
+    else:
+        return render_template("tags.html", title="Tags", tags=tags)
+
+
+@app.route("/tags/new", methods=["GET", "POST"])
+def create_tag():
+    if request.method == "POST":
+
+        tag_name = request.form.get("tag-name")
+
+        new_tag = Tag(name=tag_name)
+        db.session.add(new_tag)
+        db.session.commit()
+        tags = Tag.query.all()
+
+        return render_template("tags.html", title="Create a Tag", tags=tags)
+    else:
+        return render_template("create_tag.html", title="Create a Tag")
 
 
 if __name__ == "__main__":

@@ -11,11 +11,14 @@
 <body>
   <div class="navbar item-container">
     <h3>Navigation</h3>
+    <hr>
     {% block navbar %}
     {% endblock %}
   </div>
 
-  <h1>{% block heading %}{% endblock %}</h1>
+  <h1>
+    {% block heading %}{% endblock %}
+  </h1>
 
   <section id="content">
     {% block content%}{% endblock %}

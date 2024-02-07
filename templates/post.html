@@ -6,11 +6,12 @@
 <ul>
   <li><a href="/">Home</a></li>
   <li><a href="/users">Users</a></li>
+  <li><a href="/tags">Tags</a></li>
 </ul>
 {% endblock %}
 
 {% block content %}
-<section id="post-container" class="item-container">
+<div id="post-container" class="item-container">
   <h1>{{ post.title }}</h1>
   <div id="post-content">
     {{post.content}}
@@ -25,6 +26,6 @@
       <button type="submit" class="delete-button">Delete</button>
     </form>
   </div>
-</section>
+</div>
 
 {% endblock %}

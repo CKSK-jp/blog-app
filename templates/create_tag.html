@@ -6,24 +6,18 @@
 <ul>
   <li><a href="/" class="nav-item">Home</a></li>
   <li><a href="/users" class="nav-item">Users</a></li>
-  <li><a href="/tags">Tags</a></li>
 </ul>
 {% endblock %}
 
 {% block content %}
-
 <div id="form-container" class="item-container">
-  <h1>{{ title }}</h1>
-  <form id="surveyForm" method="POST" action="/users/new">
+  <h1>{{title}}</h1>
+  <form id="surveyForm" method="POST" action="/tags/new">
     <div class="form-group">
-      <label for="first-name">First Name</label>
-      <input type="text" name="first-name" placeholder="Enter a first name" required>
-      <label for="first-name">Last Name</label>
-      <input type="text" name="last-name" placeholder="Enter a last name" required>
-      <label for="first-name">Image URL</label>
-      <input type="url" name="img-url" placeholder="Provide an image of this user">
+      <label for="tag-name">Name</label>
+      <input type="text" name="tag-name" placeholder="Enter a name for the tag" required>
       <div class="button-container">
-        <a href="/users" class="cancel-button">Cancel</a>
+        <a href="/tags" class="cancel-button">Cancel</a>
         <button type="submit" class="add-button">Add</button>
       </div>
     </div>
