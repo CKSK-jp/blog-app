@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div id="header-container">
+  <h1>Edit Post</h1>
+</div>
+
+<div id="form-container">
+  <form id="surveyForm" method="POST" action="/posts/{{ post.id }}/edit">
+    <div class="form-group">
+      <label for="post-title">Title</label>
+      <input type="text" name="post-title" value="{{ post.title }}">
+      <label for="post-content">Content</label>
+      <textarea name="post-content" id="post-content">{{ post.content }}</textarea>
+      <div class="button-container">
+        <a href="#" onclick="history.back()" class="cancel-button">Cancel</a>
+        <button type="submit" class="save-button">Save</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -84,10 +84,13 @@ def delete_user(user_id):
     user = User.query.get(user_id)
 
     if user:
+        for post in user.posts:
+            db.session.delete(post)
+
         db.session.delete(user)
         db.session.commit()
         flash(
-            f"User {user.first_name} {user.last_name} deleted successfully!",
+            f"User {user.get_full_name()} deleted successfully!",
             category="success",
         )
     else:
@@ -117,7 +120,25 @@ def submit_post(user_id):
         posts = Posts.query.order_by(Posts.created_at).all()
         return redirect(url_for("user_details", user_id=user_id, posts=posts))
     else:
-        return render_template("post_form.html", title="New Post", user=user)
+        return render_template("create_post.html", title="New Post", user=user)
+
+
+@app.route("/posts/<int:post_id>/edit", methods=["GET", "POST"])
+def edit_post(post_id):
+
+    post = Posts.query.get(post_id)
+
+    if request.method == "POST":
+        new_title = request.form.get("post-title")
+        new_content = request.form.get("post-content")
+
+        post.title = new_title
+        post.content = new_content
+        db.session.commit()
+        flash("Post info edited!", category="success")
+        return redirect(url_for("show_post", post_id=post_id))
+    else:
+        return render_template("/edit_post.html", title="Edit Post", post=post)
 
 
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
