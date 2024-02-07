@@ -29,7 +29,7 @@ class User(db.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Posts(db.Model):
+class Post(db.Model):
     __tablename__ = "posts"
 
     id = db.Column(db.Integer, primary_key=True)

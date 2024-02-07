@@ -2,7 +2,7 @@
 
 from flask import Flask, flash, redirect, render_template, request, url_for
 
-from models import Posts, User, connect_db, db, default_img
+from models import Post, User, connect_db, db, default_img
 
 app = Flask(__name__)
 
@@ -100,7 +100,7 @@ def delete_user(user_id):
 
 @app.route("/posts/<int:post_id>")
 def show_post(post_id):
-    post = Posts.query.get(post_id)
+    post = Post.query.get(post_id)
     user = post.user
     return render_template("post.html", title="User Post", user=user, post=post)
 
@@ -113,11 +113,11 @@ def submit_post(user_id):
         title = request.form.get("post-title")
         content = request.form.get("post-content")
 
-        new_post = Posts(title=title, content=content, user_id=user_id)
+        new_post = Post(title=title, content=content, user_id=user_id)
         db.session.add(new_post)
         db.session.commit()
 
-        posts = Posts.query.order_by(Posts.created_at).all()
+        posts = Post.query.order_by(Post.created_at).all()
         return redirect(url_for("user_details", user_id=user_id, posts=posts))
     else:
         return render_template("create_post.html", title="New Post", user=user)
@@ -126,7 +126,7 @@ def submit_post(user_id):
 @app.route("/posts/<int:post_id>/edit", methods=["GET", "POST"])
 def edit_post(post_id):
 
-    post = Posts.query.get(post_id)
+    post = Post.query.get(post_id)
 
     if request.method == "POST":
         new_title = request.form.get("post-title")
@@ -144,7 +144,7 @@ def edit_post(post_id):
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
 def delete_post(post_id):
 
-    post = Posts.query.get(post_id)
+    post = Post.query.get(post_id)
 
     if post:
         user_id = post.user_id
