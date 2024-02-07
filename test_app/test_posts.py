@@ -1,10 +1,10 @@
 from unittest import TestCase
 
 from app import app, db
-from models import Posts, User, default_img
+from models import Post, User, default_img
 
 
-class PostsDatabaseTests(TestCase):
+class PostDatabaseTests(TestCase):
     def setUp(self):
         with app.app_context():
             app.config["TESTING"] = True
@@ -14,7 +14,7 @@ class PostsDatabaseTests(TestCase):
             db.session.commit()
             self.user_id = user.id
 
-            post = Posts(
+            post = Post(
                 title="Test Post", content="Nothing here.", user_id=self.user_id
             )
 
@@ -24,7 +24,7 @@ class PostsDatabaseTests(TestCase):
 
     def tearDown(self):
         with app.app_context():
-            Posts.query.delete()
+            Post.query.delete()
             User.query.delete()
 
     def test_create_post(self):
@@ -34,12 +34,12 @@ class PostsDatabaseTests(TestCase):
                 f"/users/{self.user_id}/posts/new", data=new_post, follow_redirects=True
             )
 
-            retrieved_post = Posts.query.filter_by(title="Test Post").first()
+            retrieved_post = Post.query.filter_by(title="Test Post").first()
 
             self.assertEqual(response.status_code, 200)
             self.assertIsNotNone(retrieved_post)
             self.assertEqual(retrieved_post.user_id, self.user_id)
-            self.assertEqual(db.session.query(Posts).count(), 2)
+            self.assertEqual(db.session.query(Post).count(), 2)
 
     def test_edit_post(self):
         with app.test_client() as client:
@@ -51,7 +51,7 @@ class PostsDatabaseTests(TestCase):
                 f"/posts/{self.post_id}/edit", data=edit_data, follow_redirects=True
             )
 
-            edited_post = Posts.query.get(self.post_id)
+            edited_post = Post.query.get(self.post_id)
 
             self.assertEqual(response.status_code, 200)
             self.assertEqual(edited_post.title, "Edited Post")
@@ -67,4 +67,4 @@ class PostsDatabaseTests(TestCase):
 
             self.assertEqual(response.status_code, 200)
             self.assertNotIn("Test Post", html)
-            self.assertEqual(db.session.query(Posts).count(), 0)
+            self.assertEqual(db.session.query(Post).count(), 0)
