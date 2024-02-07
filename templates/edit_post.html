@@ -2,6 +2,14 @@
 
 {% block title %}{{title}}{% endblock %}
 
+{% block navbar %}
+<ul>
+  <li><a href="/" class="nav-item">Home</a></li>
+  <li><a href="/users" class="nav-item">Users</a></li>
+</ul>
+{% endblock %}
+
+
 {% block content %}
 <div id="header-container">
   <h1>Edit Post</h1>

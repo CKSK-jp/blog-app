@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from flask_sqlalchemy import SQLAlchemy, backref
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 default_img = "/static/icons/no-profile-picture-icon.png"
@@ -52,20 +52,20 @@ class Tag(db.Model):
         return f"<Tag Name={self.name}>"
 
 
-class PostTag(db.model):
+class PostTag(db.Model):
     __tablename__ = "post_tags"
 
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey("tags.id"), primary_key=True)
 
     post = db.relationship(
-        "Post", backref=backref("post_tags", cascade="all, delete-orphan")
+        "Post", backref=db.backref("post_tags", cascade="all, delete-orphan")
     )
     tag = db.relationship(
-        "Tag", backref=backref("post_tags", cascade="all, delete-orphan")
+        "Tag", backref=db.backref("post_tags", cascade="all, delete-orphan")
     )
 
-    __table_args__ = db.UniqueConstraint("post_id", "tag_id")
+    __table_args__ = (db.UniqueConstraint("post_id", "tag_id"),)
 
     def __repr__(self):
         return f"<PostTag post_id={self.post_id}, tag_id={self.tag_id}>"

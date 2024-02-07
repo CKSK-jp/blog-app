@@ -2,13 +2,20 @@
 
 {% block title %}{{title}}{% endblock %}
 
+{% block navbar %}
+<ul>
+  <li><a href="/">Home</a></li>
+  <li><a href="/users">Users</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
-<section id="post-container">
+<section id="post-container" class="item-container">
   <h1>{{ post.title }}</h1>
   <div id="post-content">
     {{post.content}}
   </div>
-  <i>By {{ user.get_full_name() }}</i>
+  <i>By {{ user.get_full_name() }} on {{ post.created_at.strftime("%a %b %d %Y, %I:%M%p") }}</i>
 
   <div class="post-button-container">
     <a href="/users/{{ user.id }}" class="cancel-button">Cancel</a>
