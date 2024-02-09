@@ -6,16 +6,17 @@
 <ul>
   <li><a href="/">Home</a></li>
   <li><a href="/users">Users</a></li>
+  <li><a href="/tags">Tags</a></li>
 </ul>
 {% endblock %}
 
 {% block content %}
 <div id="user-container" class="item-container">
   <div id="profile-pic">
-    <img src="{{ user.image_url }}" alt="{{ user.get_full_name() }} profile pic" class="user-icon">
+    <img src="{{ user.image_url }}" alt="{{ user.get_full_name() }} profile pic" id="user-icon">
   </div>
 
-  <div>
+  <div id="user-area">
     <div id="user-info" class="sub-container">
       <div id="user-name">
         <h1>{{ user.get_full_name() }}</h1>
@@ -43,7 +44,14 @@
       </div>
     </div>
     <a href="/users/{{ user.id }}/posts/new" class="add-button">Add Post</a>
-  </div>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="flash-message {{ category }}">
+      {{ message }}
+    </div>
+    {% endfor %}
+    {% endwith %}
+  </div>
 </div>
 {% endblock %}

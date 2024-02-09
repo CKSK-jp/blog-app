@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block navbar %}
+<ul>
+  <li><a href="/">Home</a></li>
+  <li><a href="/users">Users</a></li>
+  <li><a href="/tags">Tags</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div class="item-container">
+  <h1>#{{title}}</h1>
+  <hr>
+  <div id="posts-list">
+    <ul>
+      {% for post in posts %}
+      <li class="post-item">
+        <a href="/posts/{{ post.title }}" class="post">#{{ post.title }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="tag-button-container">
+    <a href="/tags/{{ tag.id }}/edit" class="edit-button">Edit</a>
+
+    <form action="/tags/{{ tag.id }}/delete" method="POST">
+      <input type="hidden" name="tag_id">
+      <button type="submit" class="delete-button">Delete</button>
+    </form>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
+</div>
+{% endblock %}

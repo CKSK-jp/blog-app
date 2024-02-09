@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block navbar %}
+<ul>
+  <li><a href="/">Home</a></li>
+  <li><a href="/users">Users</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<div class="item-container">
+  <h1>{{ title }}</h1>
+  <hr>
+  <div id="tags-list">
+    <ul>
+      {% for tag in tags %}
+      <li class="tag-item">
+        <a href="/tags/{{ tag.id }}" class="tag">#{{ tag.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div id="add-user-btn-container">
+    <a href="/tags/new" class="add-button">Add Tag</a>
+  </div>
+</div>
+{% endblock %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="flash-message {{ category }}">
+  {{ message }}
+</div>
+{% endfor %}
+{% endwith %}

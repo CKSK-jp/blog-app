@@ -5,6 +5,7 @@
 {% block navbar %}
 <ul>
   <li><a href="/">Home</a></li>
+  <li><a href="/tags">Tags</a></li>
 </ul>
 {% endblock %}
 
@@ -22,15 +23,16 @@
     </ul>
   </div>
   <div id="add-user-btn-container">
-    <a href="/users/new" class="add-user-button">Add user</a>
+    <a href="/users/new" class="add-button">Add User</a>
   </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
 </div>
 {% endblock %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="flash-message {{ category }}">
-  {{ message }}
-</div>
-{% endfor %}
-{% endwith %}
