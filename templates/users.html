@@ -25,13 +25,14 @@
   <div id="add-user-btn-container">
     <a href="/users/new" class="add-button">Add User</a>
   </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
 </div>
 {% endblock %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="flash-message {{ category }}">
-  {{ message }}
-</div>
-{% endfor %}
-{% endwith %}

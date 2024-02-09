@@ -98,7 +98,7 @@ i {
   align-items: start;
   gap: 10px;
   margin-left: 10px;
-  width: 90%;
+  width: auto;
 }
 
 #posts-container {
@@ -108,15 +108,18 @@ i {
   margin-bottom: 10px;
 }
 
-#posts-list,
-#tags-list {
+#posts-list {
   padding-left: 20px;
   list-style: square;
 }
 
+#tags-list {
+  padding-left: 0px;
+  margin-bottom: 30px;
+}
+
 #post-content {
   background-color: #2b2b2c;
-  margin: 5px 0;
   padding: 10px;
   font-size: small;
   color: white;
@@ -156,6 +159,23 @@ i {
   flex-direction: column;
 }
 
+.tag-selector {
+  background-color: #2b2b2c;
+  border-radius: 5px;
+  color: #bdc0c1;
+  padding: 5px;
+}
+
+option:hover {
+  background-color: #4c4c4c;
+  color: white;
+}
+
+option:checked {
+  background-color: #4c4c4c;
+  color: white;
+}
+
 label {
   margin-top: 15px;
   margin-bottom: 5px;
@@ -172,6 +192,7 @@ input {
 
 .user-button-container,
 .post-button-container,
+.tag-button-container,
 .button-container {
   display: flex;
   align-items: end;
@@ -215,6 +236,18 @@ input {
   background-color: red;
 }
 
+.tag-item {
+  margin: 5px 0;
+}
+
+.tag {
+  border-radius: 5rem;
+  background-color: #bdc0c1;
+  color: #2b2b2c;
+  font-size: small;
+  padding: 2px 8px;
+}
+
 ul {
   padding: 0;
   list-style: none;
@@ -237,4 +270,21 @@ a {
 
 a:hover {
   color: white;
+}
+
+.flash-message {
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 5px;
+  color: white;
+}
+
+.flash-message.success {
+  background-color: #28a745;
+  border: 1px solid #218838;
+}
+
+.flash-message.error {
+  background-color: #dc3545;
+  border: 1px solid #c82333;
 }

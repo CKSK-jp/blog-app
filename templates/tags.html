@@ -10,14 +10,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="users item-container">
-  <h1>{{title}}</h1>
+<div class="item-container">
+  <h1>{{ title }}</h1>
   <hr>
   <div id="tags-list">
     <ul>
       {% for tag in tags %}
-      <li>
-        <a href="/tags/{{ tag.id }}">{{ tag.name }}</a>
+      <li class="tag-item">
+        <a href="/tags/{{ tag.id }}" class="tag">#{{ tag.name }}</a>
       </li>
       {% endfor %}
     </ul>

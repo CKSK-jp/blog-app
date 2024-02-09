@@ -13,7 +13,7 @@
 {% block content %}
 
 <div id="form-container" class="item-container">
-  <h1>{{ title }}</h1>
+  <h1>{{ action }} User</h1>
   <form id="surveyForm" method="POST" action="/users/new">
     <div class="form-group">
       <label for="first-name">First Name</label>
@@ -24,17 +24,17 @@
       <input type="url" name="img-url" placeholder="Provide an image of this user">
       <div class="button-container">
         <a href="/users" class="cancel-button">Cancel</a>
-        <button type="submit" class="add-button">Add</button>
+        <button type="submit" class="{{ action_class }}">Confirm {{ action }}</button>
       </div>
     </div>
   </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
 </div>
 {% endblock %}
-
-<!-- {% with messages = get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="flash-message {{ category }}">
-  {{ message }}
-</div>
-{% endfor %}
-{% endwith %}-->
