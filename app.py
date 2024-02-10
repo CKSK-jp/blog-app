@@ -274,12 +274,14 @@ def handle_tag(tag_id=None):
             btn_name=btn_name,
         )
     else:
+        tag = Tag.query.get(tag_id)
         action = "Edit"
         route = f"{tag_id}/edit"
         btn_class = "save-button"
         btn_name = "Save"
         return render_template(
             "tag_form.html",
+            tag=tag,
             route=route,
             action=action,
             btn_class=btn_class,

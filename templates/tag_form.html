@@ -15,7 +15,12 @@
   <form id="surveyForm" method="POST" action="/tags/{{ route }}">
     <div class="form-group">
       <label for="tag-name">Name</label>
+      {% if tag %}
+      <input type="text" name="tag-name" value="{{ tag.name }}" required>
+      {% else %}
       <input type="text" name="tag-name" placeholder="Enter a name for the tag" required>
+      {% endif %}
+      
       <div class="button-container">
         <a href="/tags" class="cancel-button">Cancel</a>
         <button type="submit" class="{{ btn_class }}">{{ btn_name }}</button>
