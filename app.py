@@ -20,8 +20,16 @@ with app.app_context():
 @app.route("/")
 def home_page():
     users = User.query.order_by(User.last_name, User.first_name).all()
-    posts = Post.query.order_by(Post.created_at).all()
-    return render_template("home.html", title="Home Page", users=users, posts=posts)
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+
+    post_tags = {}
+
+    for post in posts:
+        associated_tags = PostTag.query.filter_by(post_id=post.id).all()
+        post_tags[post.id] = [tag_item.tag for tag_item in associated_tags]
+    return render_template(
+        "home.html", title="Home Page", users=users, posts=posts, post_tags=post_tags
+    )
 
 
 @app.route("/users", methods=["GET"])
@@ -37,19 +45,25 @@ def handle_user(user_id=None):
     # Creating a new user
     if user_id is None:
         action = "Add"
-        action_class = "add-button"
+        route = "new"
+        btn_class = "add-button"
+        btn_name = "Add"
         user = None
 
     # Edit existing user
     else:
         action = "Edit"
-        action_class = "save-button"
+        route = f"{user_id}/submit"
+        btn_class = "save-button"
+        btn_name = "Save"
         user = User.query.get(user_id)
     return render_template(
         "user_form.html",
         user=user,
+        route=route,
         action=action,
-        action_class=action_class,
+        btn_class=btn_class,
+        btn_name=btn_name,
     )
 
 
@@ -119,28 +133,70 @@ def delete_user(user_id):
 @app.route("/posts/<int:post_id>")
 def get_post(post_id):
     post = Post.query.get(post_id)
+    associated_tags = PostTag.query.filter_by(post_id=post_id).all()
+    tags = [tag_item.tag for tag_item in associated_tags]
+
     user = post.user
-    return render_template("post.html", title="User Post", user=user, post=post)
+    return render_template(
+        "post.html", title="User Post", user=user, post=post, tags=tags
+    )
 
 
 @app.route("/users/<int:user_id>/posts/new", methods=["GET"])
-def create_post_form(user_id):
+@app.route("/posts/<int:post_id>/edit", methods=["GET"])
+def create_edit_post(user_id=None, post_id=None):
+    print("Inside new route")
     user = User.query.get(user_id)
     tags = Tag.query.all()
-    return render_template("create_post.html", title="New Post", user=user, tags=tags)
+
+    # Create a new post
+    if post_id is None:
+        title = "Create Post"
+        action = "Create"
+        btn_class = "add-button"
+        btn_name = "Add"
+        route = f"/users/{user_id}/posts/new"
+        post = None
+    # Edit existing post
+    else:
+        title = "Edit Post"
+        post = Post.query.get(post_id)
+        action = "Edit"
+        btn_class = "save-button"
+        btn_name = "Save"
+        route = f"/posts/{post_id}/edit"
+
+    return render_template(
+        "post_form.html",
+        title=title,
+        user=user,
+        post=post,
+        tags=tags,
+        action=action,
+        btn_class=btn_class,
+        btn_name=btn_name,
+        route=route,
+    )
 
 
 @app.route("/users/<int:user_id>/posts/new", methods=["POST"])
-def submit_post(user_id):
+@app.route("/posts/<int:post_id>/edit", methods=["POST"])
+def submit_post_form(user_id=None, post_id=None):
     title = request.form.get("post-title")
     content = request.form.get("post-content")
     selected_tags = request.form.getlist("tags[]")
-    print(f"selected tags: {selected_tags}")
+    print(f"Selected Tags: {selected_tags}")
 
-    create_post(user_id, title, content, selected_tags)
+    if post_id is None:
+        create_post(user_id, title, content, selected_tags)
+    else:
+        post = Post.query.get(post_id)
+        edit_post(post, title, content, selected_tags)
+        user_id = post.user_id
 
     posts = Post.query.order_by(Post.created_at).all()
-    return redirect(url_for("get_user", user_id=user_id, posts=posts))
+    flash("Post info updated!", category="success")
+    return redirect(url_for("get_post", post_id=post.id, user_id=user_id, posts=posts))
 
 
 def create_post(user_id, title, content, tags):
@@ -155,22 +211,38 @@ def create_post(user_id, title, content, tags):
     db.session.commit()
 
 
-@app.route("/posts/<int:post_id>/edit", methods=["GET", "POST"])
-def edit_post(post_id):
+def edit_post(post, title, content, tags):
+    # Update post title and content
+    post.title = title
+    post.content = content
 
-    post = Post.query.get(post_id)
+    post.tags.clear()
 
-    if request.method == "POST":
-        new_title = request.form.get("post-title")
-        new_content = request.form.get("post-content")
+    # Add the new tags to the post
+    for tag_id in tags:
+        tag = Tag.query.get(tag_id)
+        if tag:
+            post.tags.append(tag)
 
-        post.title = new_title
-        post.content = new_content
-        db.session.commit()
-        flash("Post info edited!", category="success")
-        return redirect(url_for("get_post", post_id=post_id))
-    else:
-        return render_template("/edit_post.html", title="Edit Post", post=post)
+    # Commit changes to the database
+    db.session.commit()
+
+
+# @app.route("/posts/<int:post_id>/edit", methods=["POST"])
+# def edit_post(post_id):
+
+#     post = Post.query.get(post_id)
+
+#     if request.method == "POST":
+#         new_title = request.form.get("post-title")
+#         new_content = request.form.get("post-content")
+
+#         post.title = new_title
+#         post.content = new_content
+#         db.session.commit()
+
+#         flash("Post info edited!", category="success")
+#     return redirect(url_for("get_post", post_id=post_id))
 
 
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
@@ -207,36 +279,62 @@ def get_tags():
 def handle_tag(tag_id=None):
     if tag_id is None:
         action = "Create"
-        action_class = "add-button"
+        route = "new"
+        btn_class = "add-button"
+        btn_name = "Add"
         return render_template(
-            "tag_form.html", action=action, action_class=action_class
+            "tag_form.html",
+            route=route,
+            action=action,
+            btn_class=btn_class,
+            btn_name=btn_name,
         )
     else:
         action = "Edit"
-        action_class = "save-button"
+        route = f"{tag_id}/edit"
+        btn_class = "save-button"
+        btn_name = "Save"
         return render_template(
-            "tag_form.html", action=action, action_class=action_class
+            "tag_form.html",
+            route=route,
+            action=action,
+            btn_class=btn_class,
+            btn_name=btn_name,
         )
 
 
 @app.route("/tags/new", methods=["POST"])
-def create_tag():
+@app.route("/tags/<int:tag_id>/edit", methods=["POST"])
+def create_tag(tag_id=None):
     tags = Tag.query.all()
     tag_names = [tag.name for tag in tags]
     tag_name = request.form.get("tag-name")
 
-    if tag_name not in tag_names:
+    # New tag creation
+    if tag_id is None and tag_name not in tag_names:
         new_tag = Tag(name=tag_name)
         db.session.add(new_tag)
         db.session.commit()
 
         tags = Tag.query.all()
-        return render_template("tags.html", title="Create a Tag", tags=tags)
+        flash("Tag name succesfully added!", category="success")
+
+    # Edit existing tag
+    elif tag_id and tag_name not in tag_names:
+        edited_tag = Tag.query.get(tag_id)
+        edited_tag.name = tag_name
+        db.session.commit()
+        flash("Tag name succesfully edited!", category="success")
     else:
         flash("Tag name already exists!", category="error")
-        return redirect(
-            url_for("create_tag"),
+        return render_template(
+            "tag_form.html",
+            action="Edit",
+            route=f"{tag_id}/edit",
+            btn_class="save-button",
+            btn_name="Save",
         )
+    return redirect(url_for("get_tags", title="Create a Tag", tags=tags))
 
 
 @app.route("/tags/<int:tag_id>", methods=["GET"])

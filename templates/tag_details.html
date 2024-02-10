@@ -18,7 +18,7 @@
     <ul>
       {% for post in posts %}
       <li class="post-item">
-        <a href="/posts/{{ post.title }}" class="post">#{{ post.title }}</a>
+        <a href="/posts/{{ post.id }}" class="post">{{ post.title }}</a>
       </li>
       {% endfor %}
     </ul>

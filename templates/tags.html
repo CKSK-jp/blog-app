@@ -22,16 +22,16 @@
       {% endfor %}
     </ul>
   </div>
-  <div id="add-user-btn-container">
+  <div id="button-container">
     <a href="/tags/new" class="add-button">Add Tag</a>
   </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
 </div>
 {% endblock %}
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% for category, message in messages %}
-<div class="flash-message {{ category }}">
-  {{ message }}
-</div>
-{% endfor %}
-{% endwith %}
