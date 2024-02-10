@@ -85,9 +85,7 @@ def create_user():
 def get_user(user_id):
     user = User.query.get(user_id)
     posts = user.posts
-    return render_template(
-        "user_details.html", title="User details", user=user, posts=posts
-    )
+    return render_template("user.html", title="User details", user=user, posts=posts)
 
 
 @app.route("/users/<int:user_id>/submit", methods=["POST"])
@@ -189,6 +187,9 @@ def submit_post_form(user_id=None, post_id=None):
 
     if post_id is None:
         create_post(user_id, title, content, selected_tags)
+        new_post = Post.query.filter_by(title=title).first()
+        if new_post:
+            post_id = new_post.id
     else:
         post = Post.query.get(post_id)
         edit_post(post, title, content, selected_tags)
@@ -196,7 +197,7 @@ def submit_post_form(user_id=None, post_id=None):
 
     posts = Post.query.order_by(Post.created_at).all()
     flash("Post info updated!", category="success")
-    return redirect(url_for("get_post", post_id=post.id, user_id=user_id, posts=posts))
+    return redirect(url_for("get_post", post_id=post_id, user_id=user_id, posts=posts))
 
 
 def create_post(user_id, title, content, tags):
@@ -226,23 +227,6 @@ def edit_post(post, title, content, tags):
 
     # Commit changes to the database
     db.session.commit()
-
-
-# @app.route("/posts/<int:post_id>/edit", methods=["POST"])
-# def edit_post(post_id):
-
-#     post = Post.query.get(post_id)
-
-#     if request.method == "POST":
-#         new_title = request.form.get("post-title")
-#         new_content = request.form.get("post-content")
-
-#         post.title = new_title
-#         post.content = new_content
-#         db.session.commit()
-
-#         flash("Post info edited!", category="success")
-#     return redirect(url_for("get_post", post_id=post_id))
 
 
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
@@ -290,12 +274,14 @@ def handle_tag(tag_id=None):
             btn_name=btn_name,
         )
     else:
+        tag = Tag.query.get(tag_id)
         action = "Edit"
         route = f"{tag_id}/edit"
         btn_class = "save-button"
         btn_name = "Save"
         return render_template(
             "tag_form.html",
+            tag=tag,
             route=route,
             action=action,
             btn_class=btn_class,
@@ -346,9 +332,7 @@ def get_tag(tag_id):
 
     related_posts = Post.query.filter(Post.id.in_(post_ids)).all()
 
-    return render_template(
-        "tag_details.html", title=tag.name, tag=tag, posts=related_posts
-    )
+    return render_template("tag.html", title=tag.name, tag=tag, posts=related_posts)
 
 
 @app.route("/tags/<int:tag_id>/delete", methods=["POST"])
