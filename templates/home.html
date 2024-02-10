@@ -19,6 +19,13 @@
     <div id="post-content">
       {{post.content}}
     </div>
+
+    <div id="tag-container">
+      <b>Tags: </b>
+      {% for tag in post_tags[post.id] %}
+      <span class="tag-in-post">{{ tag.name }}</span>
+      {% endfor %}
+    </div>
     <hr>
     {% for user in users %}
     {% if user.id == post.user_id %}

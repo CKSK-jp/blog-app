@@ -18,6 +18,13 @@
   </div>
   <i>By {{ user.get_full_name() }} on {{ post.created_at.strftime("%a %b %d %Y, %I:%M%p") }}</i>
 
+  <div id="tag-container">
+    <b>Tags: </b>
+    {% for tag in tags %}
+    <span class="tag-in-post">{{ tag.name }}</span>
+    {% endfor %}
+  </div>
+  <hr>
   <div class="post-button-container">
     <a href="/users/{{ user.id }}" class="cancel-button">Cancel</a>
     <a href="/posts/{{ post.id }}/edit" class="edit-button">Edit</a>
@@ -26,6 +33,14 @@
       <button type="submit" class="delete-button">Delete</button>
     </form>
   </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
 </div>
 
 {% endblock %}

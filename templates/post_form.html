@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block navbar %}
+<ul>
+  <li><a href="/" class="nav-item">Home</a></li>
+  <li><a href="/users" class="nav-item">Users</a></li>
+  <li><a href="/tags">Tags</a></li>
+</ul>
+{% endblock %}
+
+
+{% block content %}
+<div id="form-container" class="item-container">
+  <h1>{{ action }} Post</h1>
+  <form id="surveyForm" method="POST" action="{{ route }}">
+
+    <div class="form-group">
+      <label for="post-title">Title</label>
+      {% if post %}
+      <input type="text" name="post-title" value="{{ post.title }}" required>
+      {% else %}
+      <input type="text" name="post-title" placeholder="Enter a post title" required>
+      {% endif %}
+      <label for="post-content">Content</label>
+      {% if post %}
+      <textarea name="post-content" id="post-content" required>{{ post.content }}
+      </textarea>
+      {% else %}
+      <textarea name="post-content" id="post-content" placeholder="Enter post content" required></textarea>
+      {% endif %}
+      <label for="add-tags">Tags</label>
+      <select name="tags[]" id="post-tags" class="tag-selector" multiple>
+        {% for tag in tags %}
+        {% if tag in post.tags %}
+        <option value="{{ tag.id }}" selected>{{ tag.name }}</option>
+        {% else %}
+        <option value="{{ tag.id }}">{{ tag.name }}</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+
+      <div class="button-container">
+        <a href="#" onclick="history.back()" class="cancel-button">Cancel</a>
+        <button type="submit" class="{{ btn_class }}">{{ btn_name }}</button>
+      </div>
+    </div>
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+  <div class="flash-message {{ category }}">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endwith %}
+</div>
+{% endblock %}
